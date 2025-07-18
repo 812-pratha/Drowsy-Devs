@@ -8,3 +8,13 @@ app.register_blueprint(admin_bp)  # Optional if you're testing /admin
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config.from_pyfile('config.py')
+db = SQLAlchemy(app)
+
+
