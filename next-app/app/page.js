@@ -6,25 +6,31 @@ import { CircleAlert,MapPin,Component} from 'lucide-react'
 export default function Home() {
   const Router=useRouter();
   const [isLoaded, setIsLoaded] = useState(false);
+  const redirect_issuepage = () => Router.push("/issue");
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true); // Only runs on client
+  }, []);
 
   const projects = [
     {
       title: 'Issues',
       description: 'Report your issue here!',
-      icon:<CircleAlert classname="w-8 h-8"/>
+      icon:<CircleAlert className="w-8 h-8"/>
     },
     {
       title: 'Heatmap',
       description: 'Combines cutting-edge technology with medical expertise to deliver personalized healthcare solutions.',
-      icon:<MapPin classname="w-8 h-8"></MapPin>
+      icon:<MapPin className="w-8 h-8"></MapPin>
     },
     {
       title: 'Audit Module',
-      description: 'modules.....',
-      icon:<Component classname="w-8 h-8"/>
+      description: 'modules are updated',
+      icon:<Component className="w-8 h-8"/>
     }
   ]
-//Testing
+
   useEffect(() => {
     setIsLoaded(true)
   }, [])
@@ -51,9 +57,9 @@ export default function Home() {
               className="group p-6 border border-white bg-gradient-to-r from-blue-500 to-violet-500 rounded-2xl text-white hover:scale-105 transition-transform duration-300 shadow-lg"
             >
               <div className="flex items-center align mb-4">
-                <div className="p-3 bg-white text-blue-600 rounded-full text-3xl ">
+                <button onClick={redirect_issuepage} className="p-3 bg-white text-blue-600 rounded-full text-3xl ">
                   {feature.icon}
-                </div>
+                </button>
               </div>
               <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
               <p className="text-sm opacity-90">{feature.description}</p>
