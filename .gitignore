@@ -1,6 +1,35 @@
+# Node modules and build artifacts
 node_modules/
-dist/
-shevolve/
-.vite
-.next
+dist/         # Used in many projects (not common in Next.js, but good to include)
+.next/        # Next.js build directory
+.vite/        # If using Vite in any part (maybe for frontend components)
+
+# Output from static export
+out/          # If you use `next export`
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# System/IDE files
+.DS_Store     # macOS
+Thumbs.db     # Windows
+.vscode/      # IDE settings (optional)
+
+# Environment variables
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Lock files (optional, depending on your package manager)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Any specific local folders (you mentioned shevolve — assuming it's custom/local only)
+shevolve/
