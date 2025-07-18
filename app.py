@@ -7,9 +7,6 @@ app = Flask(__name__)
 app.register_blueprint(report_bp)
 app.register_blueprint(admin_bp)
 
-if __name__ == "__main__":
-    app.run(debug=True)
-
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -34,6 +31,7 @@ def report_issue():
     db.session.commit()
 
     return jsonify({'message': 'Report submitted successfully', 'report_id': report.id}), 201
+
 
 if __name__ == '__main__':
     app.run(debug=True)
