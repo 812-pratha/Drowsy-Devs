@@ -17,7 +17,7 @@ export default function AdminPage() {
   };
 
   const handleLogin = () => {
-    // 👇 Allow any credentials (for sample/demo purposes)
+    // Allow any credentials (for demo)
     setIsAuthenticated(true);
   };
 
@@ -29,12 +29,12 @@ export default function AdminPage() {
         <div className="flex justify-center items-center min-h-screen -mt-16 px-4">
           <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
             <h2 className="text-3xl font-bold text-center text-purple-700 mb-6">
-              Admin Login
+              Staff Login
             </h2>
 
             <input
               type="text"
-              placeholder="Admin ID"
+              placeholder="Staff ID"
               className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -73,11 +73,11 @@ export default function AdminPage() {
             }`}
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-700 via-pink-500 to-pink-300">
-              Admin Portal
+              Staff Portal
             </h1>
 
             <p className="text-lg md:text-xl text-gray-700 mb-10 max-w-2xl mx-auto">
-              Welcome to the Admin Portal. View and manage hygiene issue reports submitted by users across the campus.
+              Welcome to the Staff Portal. View and manage hygiene issue reports submitted by users across the campus.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
