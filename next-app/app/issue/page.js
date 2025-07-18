@@ -33,6 +33,7 @@ export default function Home() {
     };
 
     try {
+      console.log("Payload:", payload);
       const response = await fetch("http://localhost:5000/submit-issue", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -63,6 +64,7 @@ export default function Home() {
         <p className="text-gray-600 mt-2">Help us improve hygiene & maintenance</p>
       </div>
 
+<<<<<<< HEAD
       <form
         onSubmit={handleSubmit}
         className="max-w-5xl mx-auto bg-white shadow-xl rounded-xl px-10 py-12 space-y-12"
@@ -156,6 +158,40 @@ export default function Home() {
                 />
               )}
             </div>
+=======
+      <form onSubmit={handleSubmit}>
+        {/* Issue Selection */}
+        <div className="flex flex-row justify-start items-start ml-10 mt-10 gap-12 text-base font-bold">
+          Choose Your Problem
+          {/* Dustbin */}
+          <div className="flex flex-col">
+            <label>Dustbin</label>
+            <select
+              id="selected"
+              className="bg-white text-base rounded p-1 mt-1"
+              required
+              value={selected}
+              onChange={(e) => setSelected(e.target.value)}
+            >
+              <option value="">Select</option>
+              <option value="Overflowing">Overflowing</option>
+              <option value="BadOdor">Bad Odor</option>
+              <option value="NoDustbinAvailable">No Dustbin Available</option>
+              <option value="LidBrokenDamaged">Lid Broken / Damaged</option>
+              <option value="Other">Other</option>
+              <option value="noissue">No Issue</option>
+            </select>
+            {selected === 'Other' && (
+              <input
+                id="othervalue"
+                type="text"
+                placeholder="Please specify"
+                value={otherValue}
+                onChange={(e) => setOtherValue(e.target.value)}
+                className="mt-2 p-2 border rounded text-base"
+              />
+            )}
+>>>>>>> 00451b3 (Integration)
           </div>
         </section>
 
@@ -196,12 +232,94 @@ export default function Home() {
           </div>
         </section>
 
+<<<<<<< HEAD
         {/* Anonymity */}
         <section>
           <h2 className="text-2xl font-semibold mb-4 text-indigo-700">
             Do you want your response to be Anonymous?
           </h2>
           <div className="flex gap-4">
+=======
+          {/* Toilet */}
+          <div className="flex flex-col">
+            <label>Toilet</label>
+            <select
+              id="toiletOption"
+              className="bg-white text-base rounded p-1 mt-1"
+              required
+              value={toiletOption}
+              onChange={(e) => setToiletOption(e.target.value)}
+            >
+              <option value="">Select</option>
+              <option value="UncleanToilet">Unclean Toilet</option>
+              <option value="NoWaterSupply">No Water Supply</option>
+              <option value="NeedsImmediateCleaning">Needs Immediate Cleaning</option>
+              <option value="Locked">Locked</option>
+              <option value="Damaged">Damaged</option>
+              <option value="Other">Other</option>
+              <option value="noissue">No Issue</option>
+            </select>
+            {toiletOption === 'Other' && (
+              <input
+                id="toiletOther"
+                type="text"
+                placeholder="Please specify"
+                value={toiletOther}
+                onChange={(e) => setToiletOther(e.target.value)}
+                className="mt-2 p-2 border rounded text-base"
+              />
+            )}
+          </div>
+        </div>
+        {/* location */}
+        <div className="flex flex-row justify-start items-start ml-10 mt-10 gap-12 text-base font-bold">
+
+          Choose Your Location
+          <div className="flex flex-col">
+            <label>Building</label>
+            <select
+              id="building"
+              name="building"
+              className="bg-white text-base rounded p-1 mt-1"
+              required
+              value={building}
+              onChange={(e) => setBuilding(e.target.value)}
+            >
+              <option value="">Select</option>
+              <option value="A">A Building</option>
+              <option value="B">B Building</option>
+
+            </select>
+          </div>
+          {/* floor */}
+          <div className="flex flex-col">
+            <label>Floor</label>
+            <select
+              id="floor"
+              name="floor"
+              className="bg-white text-base rounded p-1 mt-1"
+              required
+              value={floor}
+              onChange={(e) => setFloor(e.target.value)}
+            >
+              <option value="">Select</option>
+              <option value="one">1st Floor</option>
+              <option value="two">2nd Floor</option>
+              <option value="three">3rd Floor</option>
+              <option value="four">4th Floor</option>
+              <option value="five">5th Floor</option>
+              <option value="six">6th Floor</option>
+            </select>
+          </div>
+
+        </div>
+
+
+        {/* Anonymous Selection */}
+        <div className="text-l ml-10 mt-10 font-bold">
+          Do you want your response to be recorded as Anonymous?
+          <div className="mt-2 space-x-4">
+>>>>>>> 00451b3 (Integration)
             <button
               type="button"
               onClick={() => setIsAnonymous(true)}

@@ -5,3 +5,5 @@ class AnonymousReport(db.Model):
     location = db.Column(db.String(100), nullable=False)
     issue_type = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text)
+    name = db.Column(db.String(100)) 
+    branch = db.Column(db.String(100)) 
