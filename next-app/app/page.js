@@ -1,116 +1,76 @@
 "use client"
-import React, { useState } from 'react';
+import { useState, useEffect,useRef } from 'react'
+import { useRouter } from "next/navigation";
+import { CircleAlert,MapPin,Component} from 'lucide-react'
 
 export default function Home() {
-  const [selected, setSelected] = useState('');
-  const [otherValue, setOtherValue] = useState('');
-  const [dispenserOption, setDispenserOption] = useState('');
-  const [dispenserOther, setDispenserOther] = useState('');
-  const [toiletOption, setToiletOption] = useState('');
-  const [toiletOther, setToiletOther] = useState('');
+  const Router=useRouter();
+  const [isLoaded, setIsLoaded] = useState(false);
+  const redirect_issuepage = () => Router.push("/issue");
+  const [isClient, setIsClient] = useState(false);
 
+  useEffect(() => {
+    setIsClient(true); // Only runs on client
+  }, []);
+
+  const projects = [
+    {
+      title: 'Issues',
+      description: 'Report your issue here!',
+      icon:<CircleAlert className="w-8 h-8"/>
+    },
+    {
+      title: 'Heatmap',
+      description: 'Combines cutting-edge technology with medical expertise to deliver personalized healthcare solutions.',
+      icon:<MapPin className="w-8 h-8"></MapPin>
+    },
+    {
+      title: 'Audit Module',
+      description: 'modules are updated',
+      icon:<Component className="w-8 h-8"/>
+    }
+  ]
+
+  useEffect(() => {
+    setIsLoaded(true)
+  }, [])
   return (
     <>
-      <div className="flex justify-center items-start pt-16 text-center">
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
-          Report your Issue
-        </h1>
-      </div>
-
-      {/* Aligned in one row with dropdowns below labels */}
-      <div className="flex flex-row justify-start items-start ml-10 mt-10 gap-12 text-base font-bold">
-        {/* Dustbin */}
-        Choose Your Problem
-        <div className="flex flex-col">
-          <label>Dustbin</label>
-          <select
-            name="dustbin_issue"
-            className="bg-white text-base rounded p-1 mt-1"
-            required
-            value={selected}
-            onChange={(e) => setSelected(e.target.value)}
-          >
-            <option value="">Select</option>
-            <option value="PartiallyFull">Partially Full</option>
-            <option value="Overflowing">Overflowing</option>
-            <option value="BadOdor">Bad Odor</option>
-            <option value="NoDustbinAvailable">No Dustbin Available</option>
-            <option value="LidBrokenDamaged">Lid Broken / Damaged</option>
-            <option value="Other">Other</option>
-          </select>
-          {selected === 'Other' && (
-            <input
-              type="text"
-              placeholder="Please specify"
-              value={otherValue}
-              onChange={(e) => setOtherValue(e.target.value)}
-              className="mt-2 p-2 border rounded text-base"
-            />
-          )}
+    <section className="pt-16 pb-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className={`text-center transition-all duration-1000 delay-300 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            
+            <h1 className="text-5xl md:text-7xl font-bold mb-6  bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+              SHEvolve-Evolves Her
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">
+              Report hygiene issues in women's washrooms across campus. Your voice helps us maintain the highest standards of cleanliness and safety.
+            </p>
+          </div>
         </div>
-
-        {/* Dispenser */}
-        <div className="flex flex-col">
-          <label>Dispenser</label>
-          <select
-            name="dispenser_issue"
-            className="bg-white text-base rounded p-1 mt-1"
-            required
-            value={dispenserOption}
-            onChange={(e) => setDispenserOption(e.target.value)}
-          >
-            <option value="">Select</option>
-            <option value="NoDispenserAvailable">No Dispenser Available</option>
-            <option value="NotDispensing">Not Dispensing</option>
-            <option value="NoPads">No Pads</option>
-            <option value="MachineOutofPower">Machine Out of Power</option>
-            <option value="PaymentNotWorking">Payment Not Working</option>
-            <option value="Damaged">Damaged</option>
-            <option value="Other">Other</option>
-          </select>
-          {dispenserOption === 'Other' && (
-            <input
-              type="text"
-              placeholder="Please specify"
-              className="mt-2 p-2 border rounded text-base"
-              value={dispenserOther}
-              onChange={(e) => setDispenserOther(e.target.value)}
-            />
-          )}
-        </div>
-
-        {/* Toilet */}
-        <div className="flex flex-col">
-          <label>Toilet</label>
-          <select
-            name="toilet_issue"
-            className="bg-white text-base rounded p-1 mt-1"
-            required
-            value={toiletOption}
-            onChange={(e) => setToiletOption(e.target.value)}
-          >
-            <option value="">Select</option>
-            <option value="UncleanToilet">Unclean Toilet</option>
-            <option value="NoWaterSupply">No Water Supply</option>
-            <option value="PoorVentilation">Poor Ventilation</option>
-            <option value="NeedsImmediateCleaning">Needs Immediate Cleaning</option>
-            <option value="Locked">Locked</option>
-            <option value="Damaged">Damaged</option>
-            <option value="Other">Other</option>
-          </select>
-          {toiletOption === 'Other' && (
-            <input
-              type="text"
-              placeholder="Please specify"
-              className="mt-2 p-2 border rounded text-base"
-              value={toiletOther}
-              onChange={(e) => setToiletOther(e.target.value)}
-            />
-          )}
+      </section>
+      <div className="relative z-10 w-full max-w-6xl px-6 mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((feature, index) => (
+            <div
+              key={index}
+              className="group p-6 border border-white bg-gradient-to-r from-blue-500 to-violet-500 rounded-2xl text-white hover:scale-105 transition-transform duration-300 shadow-lg"
+            >
+              <div className="flex items-center align mb-4">
+                <button onClick={redirect_issuepage} className="p-3 bg-white text-blue-600 rounded-full text-3xl ">
+                  {feature.icon}
+                </button>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+              <p className="text-sm opacity-90">{feature.description}</p>
+            </div>
+          ))}
         </div>
       </div>
-      {/* new things */}
-     
+
+
     </>
+    
+              
   );
 }
