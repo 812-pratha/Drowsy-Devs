@@ -1,6 +1,7 @@
 from flask import Flask,Blueprint, request, jsonify
 from routes.report_routes import report_bp
 from routes.admin_routes import admin_bp
+from models import AnonymousReport
 
 app = Flask(__name__)
 app.register_blueprint(report_bp)
@@ -36,6 +37,19 @@ def report_issue():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+report_bp = Blueprint('report', __name__)
+
+@report_bp.route('/get_reports', methods=['GET'])
+def get_reports():
+    reports = AnonymousReport.query.all()
+    return jsonify([{
+        'id': report.id,
+        'location': report.location,
+        'issue_type': report.issue_type,
+        'description': report.description
+    } for report in reports]), 200
+
 
 
 
