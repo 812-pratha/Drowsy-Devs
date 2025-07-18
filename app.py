@@ -1,10 +1,10 @@
 from flask import Flask
 from routes.report_routes import report_bp
-from routes.admin_routes import admin_bp  # Only if you added admin
+from routes.admin_routes import admin_bp
 
 app = Flask(__name__)
 app.register_blueprint(report_bp)
-app.register_blueprint(admin_bp)  # Optional if you're testing /admin
+app.register_blueprint(admin_bp)
 
 if __name__ == "__main__":
     app.run(debug=True)
