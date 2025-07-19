@@ -21,11 +21,17 @@ export default function AuditDashboard() {
     const [restroomData, setRestroomData] = useState(null);
     const [dustbinData, setDustbinData] = useState(null);
 
+    const [locationData, setLocationData] = useState(null);
+    const [showLocationGraphs, setShowLocationGraphs] = useState(false);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch("http://127.0.0.1:5000/api/audit_data");
-                const data = await res.json();
+                const res1 = await fetch("http://127.0.0.1:5000/api/audit_data");
+                const res2 = await fetch("http://127.0.0.1:5000/api/location_data");
+
+                const data1 = await res1.json();
+                const data2 = await res2.json();
 
                 const makeChartData = (categoryData, colorResolved, colorUnresolved) => {
                     const labels = Array.from(
@@ -34,34 +40,26 @@ export default function AuditDashboard() {
                             ...Object.keys(categoryData["Unresolved"] || {}),
                         ])
                     );
-
                     const resolvedData = labels.map((label) => categoryData["Resolved"]?.[label] || 0);
                     const unresolvedData = labels.map((label) => categoryData["Unresolved"]?.[label] || 0);
-
                     return {
                         labels,
                         datasets: [
-                            {
-                                label: "Resolved",
-                                data: resolvedData,
-                                backgroundColor: colorResolved,
-                            },
-                            {
-                                label: "Unresolved",
-                                data: unresolvedData,
-                                backgroundColor: colorUnresolved,
-                            },
+                            { label: "Resolved", data: resolvedData, backgroundColor: colorResolved },
+                            { label: "Unresolved", data: unresolvedData, backgroundColor: colorUnresolved },
                         ],
                     };
                 };
 
-                setDispenserData(makeChartData(data.Dispenser, "rgba(54, 162, 235, 0.6)", "rgba(255, 159, 64, 0.6)"));
-                setRestroomData(makeChartData(data.Restroom, "rgba(75, 192, 192, 0.6)", "rgba(255, 159, 64, 0.6)"));
-                setDustbinData(makeChartData(data.Dustbin, "rgba(255, 99, 132, 0.6)", "rgba(255, 159, 64, 0.6)"));
+                setDispenserData(makeChartData(data1.Dispenser, "rgba(54, 162, 235, 0.6)", "rgba(255, 159, 64, 0.6)"));
+                setRestroomData(makeChartData(data1.Restroom, "rgba(75, 192, 192, 0.6)", "rgba(255, 159, 64, 0.6)"));
+                setDustbinData(makeChartData(data1.Dustbin, "rgba(255, 99, 132, 0.6)", "rgba(255, 159, 64, 0.6)"));
+
+                setLocationData(data2);  // already in final chart.js format
 
                 setIsLoaded(true);
             } catch (error) {
-                console.error("Error fetching audit data:", error);
+                console.error("Fetch error:", error);
             }
         };
 
@@ -131,9 +129,23 @@ export default function AuditDashboard() {
                         </div>
 
                         {/* Placeholder for Location Specific if needed */}
-                        <div className="bg-white p-8 rounded-2xl shadow-xl border text-gray-500 flex justify-center items-center">
-                            <p className="text-center">Location Specific Charts not implemented yet from DB.</p>
+                        <div className="bg-white p-8 rounded-2xl shadow-xl border hover:shadow-2xl transition-all duration-300">
+                            <button
+                                className="w-full text-left"
+                                onClick={() => setShowLocationGraphs(!showLocationGraphs)}
+                            >
+                                <h2 className="text-3xl font-semibold text-purple-600 mb-4">Location Specific</h2>
+                            </button>
+                            {showLocationGraphs && locationData && (
+                                <div className="mt-4">
+                                    <h3 className="text-lg font-semibold text-indigo-500 mb-2">
+                                        All Locations
+                                    </h3>
+                                    <Bar options={barOptions} data={locationData} />
+                                </div>
+                            )}
                         </div>
+
                     </div>
                 </div>
             </section>

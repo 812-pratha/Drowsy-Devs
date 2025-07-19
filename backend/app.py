@@ -222,6 +222,49 @@ def get_floor_data():
         "B": dict(building_data["B"]),
     })
 
+@app.route('/api/location_issues')
+def get_location_issues():
+    reports = AnonymousReport.query.all()
+    issues = IndividualIssue.query.all()
+
+    # Map report_id to location
+    report_id_to_location = {report.id: report.location for report in reports}
+
+    # Aggregate data
+    from collections import defaultdict
+    location_totals = defaultdict(lambda: {"Resolved": 0, "Unresolved": 0})
+
+    for issue in issues:
+        location = report_id_to_location.get(issue.report_id)
+        if not location:
+            continue
+        status = issue.status.title() if issue.status else "Unresolved"
+        if status not in ["Resolved", "Unresolved"]:
+            status = "Unresolved"
+        location_totals[location][status] += 1
+
+    # Prepare chart data
+    labels = sorted(location_totals.keys())
+    resolved = [location_totals[loc]["Resolved"] for loc in labels]
+    unresolved = [location_totals[loc]["Unresolved"] for loc in labels]
+
+    chart_data = {
+        "labels": labels,
+        "datasets": [
+            {
+                "label": "Resolved",
+                "data": resolved,
+                "backgroundColor": "rgba(75, 192, 192, 0.6)",
+            },
+            {
+                "label": "Unresolved",
+                "data": unresolved,
+                "backgroundColor": "rgba(255, 99, 132, 0.6)",
+            },
+        ],
+    }
+
+    return jsonify(chart_data)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
