@@ -1,13 +1,17 @@
+
 from extensions import db
-from datetime import datetime, timedelta
+from datetime import datetime
 
 class AnonymousReport(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    issue_type = db.Column(db.String(255))
-    description = db.Column(db.String(255))
+    name = db.Column(db.String(100), default="Anonymous")
+    branch = db.Column(db.String(100), default="Anonymous")
+    issue_type = db.Column(db.String(200))     
+    description = db.Column(db.Text)  
     location = db.Column(db.String(255))
-    timestamp = db.Column(db.DateTime)
-    status = db.Column(db.String(50), default='Unresolved')
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    status = db.Column(db.String(20), default='Unresolved')
+
 
 class FacilityAudit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
