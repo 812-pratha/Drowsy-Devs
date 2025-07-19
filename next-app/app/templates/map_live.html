@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Hygiene Issue Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+  <style>
+    #map { height: 90vh; }
+    .pulse-marker {
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <h2 style="text-align:center; padding-top:10px;">Live Hygiene Reporting Map</h2>
+  <div id="map">{{ folium_map|safe }}</div>
+
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script>
+    let map = window.map; // Folium map already initialized
+
+    let markers = [];
+
+    function fetchLiveUpdates() {
+      fetch('/live-issues')
+        .then(res => res.json())
+        .then(data => {
+          markers.forEach(m => map.removeLayer(m));
+          markers = [];
+
+          data.forEach(issue => {
+            const marker = L.marker([issue.lat, issue.lon])
+              .bindPopup(`<b>${issue.issue_type}</b><br>${issue.description}`)
+              .addTo(map);
+
+            marker._icon.classList.add("pulse-marker");
+            markers.push(marker);
+          });
+        });
+    }
+
+    setInterval(fetchLiveUpdates, 10000);  // update every 10 seconds
+    fetchLiveUpdates();
+  </script>
+</body>
+</html>
