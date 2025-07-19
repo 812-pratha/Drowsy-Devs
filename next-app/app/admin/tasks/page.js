@@ -28,10 +28,16 @@ export default function UpdatePage() {
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        setIsLoaded(true);
+        const fetchData = async () => {
+            const res = await fetch("http://127.0.0.1:5000/api/issues");
+            const data = await res.json();
+            setIssues(data); // {Dustbin: [...], Restroom: [...], Dispenser: [...]}
+        };
+        fetchData();
     }, []);
 
-    const handleStatusChange = (category, id, newStatus) => {
+    const handleStatusChange = async (category, id, newStatus) => {
+        // Update UI locally first
         setIssues((prev) => ({
             ...prev,
             [category]:
@@ -41,12 +47,41 @@ export default function UpdatePage() {
                         issue.id === id ? { ...issue, status: newStatus } : issue
                     ),
         }));
+
+        try {
+            const res = await fetch("http://127.0.0.1:5000/api/update_issue", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: id, status: newStatus }),
+            });
+
+            const result = await res.json();
+            if (!result.success) {
+                console.error("Update failed:", result.error);
+            }
+        } catch (error) {
+            console.error("Fetch error:", error);
+        }
     };
 
-    const handleSubmit = () => {
-        console.log("Updated Issues:", issues);
-        alert("Status updated! (demo only)");
+
+
+    const handleSubmit = async () => {
+        for (const category of categories) {
+            for (const issue of issues[category]) {
+                await fetch("http://127.0.0.1:5000/api/update_issue", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        id: issue.id,
+                        status: issue.status
+                    })
+                });
+            }
+        }
+        alert("Status updated!");
     };
+
 
     return (
         <>

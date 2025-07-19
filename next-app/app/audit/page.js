@@ -23,52 +23,61 @@ ChartJS.register(
 );
 
 export default function AuditPage() {
+    const [charts, setCharts] = useState({});
     const [isLoaded, setIsLoaded] = useState(false);
     const [dispenserData, setDispenserData] = useState(null);
     const [restroomData, setRestroomData] = useState(null);
     const [dustbinData, setDustbinData] = useState(null);
 
     useEffect(() => {
-        setIsLoaded(true);
-
         const fetchData = async () => {
-            const response = await fetch("http://localhost:5000/api/audit_data");
-            const data = await response.json();
+            const res = await fetch("http://127.0.0.1:5000/api/audit_data");
+            const data = await res.json();
 
-            setDispenserData({
-                labels: Object.keys(data.dispenser),
-                datasets: [{
-                    label: "Issues",
-                    data: Object.values(data.dispenser),
-                    borderColor: "blue",
-                    backgroundColor: "rgba(0, 0, 255, 0.2)",
-                    tension: 0.4,
-                }],
-            });
+            const makeChartData = (categoryData) => {
+                const labels = Array.from(
+                    new Set([
+                        ...Object.keys(categoryData["Resolved"] || {}),
+                        ...Object.keys(categoryData["Unresolved"] || {}),
+                    ])
+                );
 
-            setRestroomData({
-                labels: Object.keys(data.restroom),
-                datasets: [{
-                    label: "Issues",
-                    data: Object.values(data.restroom),
-                    borderColor: "green",
-                    backgroundColor: "rgba(0, 128, 0, 0.2)",
-                    tension: 0.4,
-                }],
-            });
+                const resolvedData = labels.map(label => categoryData["Resolved"]?.[label] || 0);
+                const unresolvedData = labels.map(label => categoryData["Unresolved"]?.[label] || 0);
 
-            setDustbinData({
-                labels: Object.keys(data.dustbin),
-                datasets: [{
-                    label: "Issues",
-                    data: Object.values(data.dustbin),
-                    borderColor: "red",
-                    backgroundColor: "rgba(255, 0, 0, 0.2)",
-                    tension: 0.4,
-                }],
-            });
+                return {
+                    labels,
+                    datasets: [
+                        {
+                            label: "Resolved",
+                            data: resolvedData,
+                            backgroundColor: "rgba(34, 197, 94, 0.6)", // green
+                            borderColor: "rgba(34, 197, 94, 1)",
+                            borderWidth: 2,
+                            fill: false,
+                        },
+                        {
+                            label: "Unresolved",
+                            data: unresolvedData,
+                            backgroundColor: "rgba(239, 68, 68, 0.6)", // red
+                            borderColor: "rgba(239, 68, 68, 1)",
+                            borderWidth: 2,
+                            fill: false,
+                        },
+                    ],
+                };
+            };
+
+            const dispenser = makeChartData(data.Dispenser);
+            const restroom = makeChartData(data.Restroom);
+            const dustbin = makeChartData(data.Dustbin);
+
+            setCharts({ Dispenser: dispenser, Restroom: restroom, Dustbin: dustbin });
+            setDispenserData(dispenser);
+            setRestroomData(restroom);
+            setDustbinData(dustbin);
+            setIsLoaded(true);
         };
-
 
         fetchData();
     }, []);
@@ -98,7 +107,9 @@ export default function AuditPage() {
             <section className="pt-16 pb-10 px-6">
                 <div className="max-w-6xl mx-auto text-center">
                     <div
-                        className={`transition-all duration-1000 delay-300 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+                        className={`transition-all duration-1000 delay-300 ${isLoaded
+                            ? "translate-y-0 opacity-100"
+                            : "translate-y-10 opacity-0"
                             }`}
                     >
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-700 via-pink-500 to-pink-300">

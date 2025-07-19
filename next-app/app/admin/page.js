@@ -1,7 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function AdminPage() {
+  const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -17,8 +19,8 @@ export default function AdminPage() {
   };
 
   const handleLogin = () => {
-    // Allow any credentials (for demo)
     setIsAuthenticated(true);
+    router.push('/admin') // Accepts any credentials
   };
 
   if (!isAuthenticated) {
@@ -68,9 +70,8 @@ export default function AdminPage() {
       <section className="pt-16 pb-10 px-6">
         <div className="max-w-5xl mx-auto text-center">
           <div
-            className={`transition-all duration-1000 delay-300 ${
-              isLoaded ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-            }`}
+            className={`transition-all duration-1000 delay-300 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+              }`}
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-700 via-pink-500 to-pink-300">
               Staff Portal
@@ -90,11 +91,12 @@ export default function AdminPage() {
               </div>
 
               <div
-                className="p-6 rounded-xl text-white shadow-lg border border-white hover:scale-105 transition-transform"
+                onClick={() => router.push("/admin/tasks")}
+                className="cursor-pointer p-6 rounded-xl text-white shadow-lg border border-white hover:scale-105 transition-transform"
                 style={gradientStyle}
               >
                 <h3 className="text-xl font-semibold mb-2">Update Status</h3>
-                <p className="text-sm">Change status of issues (resolved, in-progress, etc.).</p>
+                <p className="text-sm">Change status of issues (resolved, unresolved, etc.).</p>
               </div>
             </div>
           </div>

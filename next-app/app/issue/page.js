@@ -205,18 +205,16 @@ export default function Home() {
             <button
               type="button"
               onClick={() => setIsAnonymous(true)}
-              className={`px-4 py-2 rounded font-semibold ${
-                isAnonymous ? "bg-green-600 text-white" : "bg-gray-200"
-              }`}
+              className={`px-4 py-2 rounded font-semibold ${isAnonymous ? "bg-green-600 text-white" : "bg-gray-200"
+                }`}
             >
               Yes
             </button>
             <button
               type="button"
               onClick={() => setIsAnonymous(false)}
-              className={`px-4 py-2 rounded font-semibold ${
-                isAnonymous === false ? "bg-red-600 text-white" : "bg-gray-200"
-              }`}
+              className={`px-4 py-2 rounded font-semibold ${isAnonymous === false ? "bg-red-600 text-white" : "bg-gray-200"
+                }`}
             >
               No
             </button>
@@ -237,7 +235,7 @@ export default function Home() {
               />
             </div>
             <div>
-              <label className="font-bold block mb-1">Branch:</label>
+              <label className="font-bold block mb-1">Email:</label>
               <input
                 required
                 type="text"
