@@ -43,3 +43,5 @@ Thumbs.db
 # Git
 *.swp
 *.swo
+__pycache__/
+*.pyc
