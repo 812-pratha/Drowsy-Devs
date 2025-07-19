@@ -7,15 +7,26 @@ from models import AnonymousReport, FacilityAudit, IndividualIssue
 from folium.plugins import HeatMap
 from collections import defaultdict
 import folium
+import os
+from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
 
+load_dotenv() 
+
+# ✅ Initialize Flask first
 app = Flask(__name__)
-app.config.from_pyfile('config.py')
-db.init_app(app)
+
+# ✅ Now configure it
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.secret_key = os.environ.get('SECRET_KEY', 'devfallback')
+
+# ✅ Initialize extensions after configuration
+db = SQLAlchemy(app)
 CORS(app)
 
+# ✅ Register blueprints
 app.register_blueprint(report_bp)
 app.register_blueprint(admin_bp)
-
 
 @app.route('/map')
 def show_map():
