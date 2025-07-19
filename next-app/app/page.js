@@ -24,7 +24,7 @@ export default function Home() {
       title: 'Heatmap',
       description: 'Combines cutting-edge technology with medical expertise to deliver personalized healthcare solutions.',
       icon: <MapPin className="w-8 h-8" />,
-      link: '/map'
+      link: 'http://127.0.0.1:5000/map'
     },
     {
       title: 'Audit Module',
@@ -91,6 +91,16 @@ export default function Home() {
               <p className="text-sm opacity-90">{feature.description}</p>
             </div>
           ))}
+        </div>
+
+        <div className="mt-10">
+          <h2 className="text-white text-2xl font-semibold mb-4">Live Heatmap</h2>
+          <iframe
+            src="http://127.0.0.1:5000/map"
+            style={{ width: '100%', height: '500px', border: 'none', borderRadius: '1rem' }}
+            title="Heatmap"
+          />
+
         </div>
       </div>
     </>
