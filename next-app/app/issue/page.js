@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function Home() {
   const [selected, setSelected] = useState("");
@@ -14,6 +14,36 @@ export default function Home() {
   const [name, setName] = useState("");
   const [branch, setBranch] = useState("");
   const [message, setMessage] = useState("");
+
+  function floorNumToWord(num) {
+    const map = {
+      '1': 'one',
+      '2': 'two',
+      '3': 'three',
+      '4': 'four',
+      '5': 'five',
+      '6': 'six'
+    };
+    return map[num] || '';
+  }
+
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const locationParam = urlParams.get('location');
+
+    if (locationParam) {
+      if (locationParam.startsWith('buildingA')) {
+        setBuilding('A');
+        const floorNum = locationParam.replace('buildingA', '');
+        setFloor(floorNumToWord(floorNum));
+      } else if (locationParam.startsWith('buildingB')) {
+        setBuilding('B');
+        const floorNum = locationParam.replace('buildingB', '');
+        setFloor(floorNumToWord(floorNum));
+      }
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
