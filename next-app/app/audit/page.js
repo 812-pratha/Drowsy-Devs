@@ -17,59 +17,101 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 export default function AuditDashboard() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [showIssueGraphs, setShowIssueGraphs] = useState(false);
+    const [showLocationGraphs, setShowLocationGraphs] = useState(false);
+
     const [dispenserData, setDispenserData] = useState(null);
     const [restroomData, setRestroomData] = useState(null);
     const [dustbinData, setDustbinData] = useState(null);
-
-    const [locationData, setLocationData] = useState(null);
-    const [showLocationGraphs, setShowLocationGraphs] = useState(false);
+    const [buildingAData, setBuildingAData] = useState(null);
+    const [buildingBData, setBuildingBData] = useState(null);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res1 = await fetch("http://127.0.0.1:5000/api/audit_data");
-                const res2 = await fetch("http://127.0.0.1:5000/api/location_data");
+        setIsLoaded(true);
 
-                const data1 = await res1.json();
-                const data2 = await res2.json();
+        setDispenserData({
+            labels: ["Damaged", "Empty", "Out of power", "Payment failure", "Other"],
+            datasets: [
+                {
+                    label: "Resolved",
+                    data: [1, 2, 1, 3, 0],
+                    backgroundColor: "rgba(54, 162, 235, 0.6)",
+                },
+                {
+                    label: "Unresolved",
+                    data: [0, 3, 1, 1, 0],
+                    backgroundColor: "rgba(255, 159, 64, 0.6)",
+                },
+            ],
+        });
 
-                const makeChartData = (categoryData, colorResolved, colorUnresolved) => {
-                    const labels = Array.from(
-                        new Set([
-                            ...Object.keys(categoryData["Resolved"] || {}),
-                            ...Object.keys(categoryData["Unresolved"] || {}),
-                        ])
-                    );
-                    const resolvedData = labels.map((label) => categoryData["Resolved"]?.[label] || 0);
-                    const unresolvedData = labels.map((label) => categoryData["Unresolved"]?.[label] || 0);
-                    return {
-                        labels,
-                        datasets: [
-                            { label: "Resolved", data: resolvedData, backgroundColor: colorResolved },
-                            { label: "Unresolved", data: unresolvedData, backgroundColor: colorUnresolved },
-                        ],
-                    };
-                };
+        setRestroomData({
+            labels: [
+                "No water supply",
+                "Locked",
+                "Damaged",
+                "Needs cleaning",
+                "Other",
+                "No issues",
+            ],
+            datasets: [
+                {
+                    label: "Resolved",
+                    data: [1, 3, 1, 2, 0, 2],
+                    backgroundColor: "rgba(75, 192, 192, 0.6)",
+                },
+                {
+                    label: "Unresolved",
+                    data: [0, 2, 1, 2, 0, 1],
+                    backgroundColor: "rgba(255, 159, 64, 0.6)",
+                },
+            ],
+        });
 
-                setDispenserData(makeChartData(data1.Dispenser, "rgba(54, 162, 235, 0.6)", "rgba(255, 159, 64, 0.6)"));
-                setRestroomData(makeChartData(data1.Restroom, "rgba(75, 192, 192, 0.6)", "rgba(255, 159, 64, 0.6)"));
-                setDustbinData(makeChartData(data1.Dustbin, "rgba(255, 99, 132, 0.6)", "rgba(255, 159, 64, 0.6)"));
+        setDustbinData({
+            labels: ["Full", "Damaged", "Needs cleaning", "Other", "No issues"],
+            datasets: [
+                {
+                    label: "Resolved",
+                    data: [1, 3, 1, 2, 0],
+                    backgroundColor: "rgba(255, 99, 132, 0.6)",
+                },
+                {
+                    label: "Unresolved",
+                    data: [0, 2, 1, 2, 0],
+                    backgroundColor: "rgba(255, 159, 64, 0.6)",
+                },
+            ],
+        });
 
-                setLocationData(data2);  // already in final chart.js format
+        setBuildingAData({
+            labels: ["1st Floor", "2nd Floor", "3rd Floor", "4th Floor"],
+            datasets: [
+                {
+                    label: "Total Issues",
+                    data: [5, 7, 3, 3],
+                    backgroundColor: "rgba(153, 102, 255, 0.6)",
+                },
+            ],
+        });
 
-                setIsLoaded(true);
-            } catch (error) {
-                console.error("Fetch error:", error);
-            }
-        };
-
-        fetchData();
+        setBuildingBData({
+            labels: ["1st Floor", "2nd Floor", "3rd Floor", "4th Floor", "5th Floor", "6th Floor"],
+            datasets: [
+                {
+                    label: "Total Issues",
+                    data: [2, 4, 6, 1, 0, 3],
+                    backgroundColor: "rgba(255, 205, 86, 0.6)",
+                },
+            ],
+        });
     }, []);
 
     const barOptions = {
         responsive: true,
         plugins: {
-            legend: { position: "top" },
+            legend: {
+                position: "top",
+            },
         },
         scales: {
             y: {
@@ -106,46 +148,55 @@ export default function AuditDashboard() {
                             </button>
                             {showIssueGraphs && (
                                 <div className="mt-4 space-y-6">
-                                    {dispenserData && (
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-blue-500 mb-2">Dispenser Issues</h3>
-                                            <Bar options={barOptions} data={dispenserData} />
-                                        </div>
-                                    )}
-                                    {restroomData && (
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-green-500 mb-2">Restroom Issues</h3>
-                                            <Bar options={barOptions} data={restroomData} />
-                                        </div>
-                                    )}
-                                    {dustbinData && (
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-red-500 mb-2">Dustbin Issues</h3>
-                                            <Bar options={barOptions} data={dustbinData} />
-                                        </div>
-                                    )}
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-blue-500 mb-2">
+                                            Dispenser Issues
+                                        </h3>
+                                        <Bar options={barOptions} data={dispenserData} />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-green-500 mb-2">
+                                            Restroom Issues
+                                        </h3>
+                                        <Bar options={barOptions} data={restroomData} />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-red-500 mb-2">
+                                            Dustbin Issues
+                                        </h3>
+                                        <Bar options={barOptions} data={dustbinData} />
+                                    </div>
                                 </div>
                             )}
                         </div>
 
-                        {/* Placeholder for Location Specific if needed */}
+                        {/* Location Specific */}
                         <div className="bg-white p-8 rounded-2xl shadow-xl border hover:shadow-2xl transition-all duration-300">
                             <button
                                 className="w-full text-left"
                                 onClick={() => setShowLocationGraphs(!showLocationGraphs)}
                             >
-                                <h2 className="text-3xl font-semibold text-purple-600 mb-4">Location Specific</h2>
+                                <h2 className="text-3xl font-semibold text-purple-600 mb-4">
+                                    Location Specific
+                                </h2>
                             </button>
-                            {showLocationGraphs && locationData && (
-                                <div className="mt-4">
-                                    <h3 className="text-lg font-semibold text-indigo-500 mb-2">
-                                        All Locations
-                                    </h3>
-                                    <Bar options={barOptions} data={locationData} />
+                            {showLocationGraphs && (
+                                <div className="mt-4 grid gap-6">
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-indigo-500 mb-2">
+                                            Building A
+                                        </h3>
+                                        <Bar options={barOptions} data={buildingAData} />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-yellow-500 mb-2">
+                                            Building B
+                                        </h3>
+                                        <Bar options={barOptions} data={buildingBData} />
+                                    </div>
                                 </div>
                             )}
                         </div>
-
                     </div>
                 </div>
             </section>

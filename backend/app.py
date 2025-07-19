@@ -222,6 +222,8 @@ def get_floor_data():
         "B": dict(building_data["B"]),
     })
 
+
+
 @app.route('/api/location_issues')
 def get_location_issues():
     reports = AnonymousReport.query.all()
