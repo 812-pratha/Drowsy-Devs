@@ -188,6 +188,40 @@ def update_task_status():
         return jsonify({"success": True})
     return jsonify({"success": False, "error": "Not found"}), 404
 
+@app.route('/api/floor_data')
+def get_floor_data():
+    reports = AnonymousReport.query.all()
+    building_data = {
+        "A": defaultdict(int),
+        "B": defaultdict(int),
+    }
+
+    ordinal_map = {
+
+        "one": "1st Floor",
+        "two": "2nd Floor",
+        "three": "3rd Floor",
+        "four": "4th Floor",
+        "five": "5th Floor",
+        "six": "6th Floor"
+    }
+
+    for report in reports:
+        parts = report.location.lower().split(",")
+        if len(parts) < 2:
+            continue
+        building = parts[0].strip().upper()
+        floor_key = parts[1].strip()
+        floor_label = ordinal_map.get(floor_key, floor_key.title())
+
+        if building in building_data:
+            building_data[building][floor_label] += 1
+
+    return jsonify({
+        "A": dict(building_data["A"]),
+        "B": dict(building_data["B"]),
+    })
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

@@ -82,7 +82,7 @@ export default function AdminPage() {
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div
+              <div onClick={() => router.push("/admin/view")}
                 className="p-6 rounded-xl text-white shadow-lg border border-white hover:scale-105 transition-transform"
                 style={gradientStyle}
               >
